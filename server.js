@@ -12,7 +12,6 @@ app.use(cors({optionsSuccessStatus: 200}));  // some legacy browsers choke on 20
 
 // load env variables
 const dotenv = require("dotenv")
-
 dotenv.config()
 
 // http://expressjs.com/en/starter/static-files.html
@@ -32,6 +31,8 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
 
-app.get("/api/timestamp/1451001600000", function (req, res) {
-  res.json({ unix: 1451001600000, utc: "Fri, 25 Dec 2015 00:00:00 GMT" });
+app.get("/api/timestamp/:timestamp", (req, res) => {
+  let timestamp = parseInt(req.params.timestamp);
+  let utc = new Date(timestamp).toUTCString();
+  res.send({unix: timestamp, utc: utc});
 });
