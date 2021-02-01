@@ -32,13 +32,20 @@ app.get('/', (req, res) => {
 });
 
 app.get("/api/timestamp/:timestamp", (req, res) => {
-  let timestamp = parseInt(req.params.timestamp);
-  let utc = new Date(timestamp);
-  if (utc.toString() === "Invalid Date") {
-    res.json({ error: "Invalid Date" });
+  let timestampString = req.params.timestamp;
+
+  if (/\d{5,}/.test(timestampString)) {
+    let timestamp = parseInt(timestampString);
+    res.json({unix: timestamp, utc: new Date(timestamp).toUTCString()});
   } else {
-    res.json({unix: timestamp, utc: utc.toUTCString()});
+    let date = new Date(timestampString);
+    if (date.toString() === "Invalid Date") {
+      res.json({ error: "Invalid Date" });
+    } else {
+      res.json({unix: timestamp, utc: date.toUTCString()});
+    }
   }
+
 });
 
 app.get("/api/timestamp/", (req, res) => {
