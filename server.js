@@ -33,8 +33,12 @@ app.get('/', (req, res) => {
 
 app.get("/api/timestamp/:timestamp", (req, res) => {
   let timestamp = parseInt(req.params.timestamp);
-  let utc = new Date(timestamp).toUTCString();
-  res.send({unix: timestamp, utc: utc});
+  let utc = new Date(timestamp);
+  if (utc.toString() === "Invalid Date") {
+    res.json({ error: "Invalid Date" });
+  } else {
+    res.json({unix: timestamp, utc: utc.toUTCString()});
+  }
 });
 
 app.get("/api/timestamp/", (req, res) => {
